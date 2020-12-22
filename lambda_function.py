@@ -9,6 +9,7 @@ def lambda_handler(event, context):
         logGroupName = event['logGroupName']
         topicArn     = event['TopicArn']
         subject      = event['Subject']
+        queryString  = event['queryString']
         snsmessage ="The following lines contains errors:"
         notification = False
         flag = True
@@ -39,7 +40,7 @@ def lambda_handler(event, context):
             logGroupName= logGroupName,
             startTime=getYesterdayMilsec,
             endTime=getCurrentMilsec,
-            queryString='filter @message like /ERROR/ and @message like /Document/'
+            queryString=queryString
         )
         
         data = json.dumps(response, indent=2, default=default)
