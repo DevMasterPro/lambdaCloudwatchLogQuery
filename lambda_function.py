@@ -6,6 +6,9 @@ import time
 
 def lambda_handler(event, context):
     try:
+        logGroupName = event['logGroupName']
+        topicArn     = event['TopicArn']
+        subject      = event['Subject']
         snsmessage ="The following lines contains errors:"
         notification = False
         flag = True
@@ -33,7 +36,7 @@ def lambda_handler(event, context):
         
         client = boto3.client('logs')
         response = client.start_query(
-            logGroupName='log group name goes here',
+            logGroupName= logGroupName,
             startTime=getYesterdayMilsec,
             endTime=getCurrentMilsec,
             queryString='filter @message like /ERROR/ and @message like /Document/'
@@ -70,9 +73,9 @@ def lambda_handler(event, context):
             
             if notification == True:
                 sns = snsClient.publish(
-                    TopicArn='sns topic arn goes here',
+                    TopicArn=topicArn,
                     Message=snsmessage,
-                    Subject='DPSI Alarm',
+                    Subject=subject,
                 )
         else:
             print("The List is empty.")
